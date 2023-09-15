@@ -1,95 +1,88 @@
-# Next.js OpenAI Boilerplate
+# Vector Database.
 
-This is a simplified yet effective Next.js boilerplate project that showcases how to integrate the OpenAI API within a Next.js application. The boilerplate incorporates a user-friendly interface for submitting prompts and rendering the response from the OpenAI API.
+A vector database is like a clever tool for sorting words and numbers. Imagine you have lots of words, and you want to organize them based on what they mean or how they're related. Normally, you'd group them by categories, like animals or fruits.
 
-## Features
+But with a vector database, you organize them based on their similarities. Each group of similar words gets its own special place, and each word is represented by a bunch of numbers that describe these similarities.
 
--   Well-structured Next.js configuration with a minimalistic user interface.
--   Flexibly customizable prompts in a dedicated folder.
--   Utilizes OpenAI's GPT-3.5 Turbo model for chat completion (Model Version: gpt-3.5-turbo-0613).
--   Function calling mechanism included to create meaningful interactions with the AI model.
--   In-built error handling and management of loading states.
+So, if you want to find all the words related to 'happy,' you just look in the 'happy' place, and the vector database quickly shows you all the words that are similar in meaning.
 
-## Getting Started
+## Step by step to create a vector database on Supabase.
 
-### Prerequisites
+1. Create an account on [supabase.com](https://supabase.com/dashboard/sign-in?) if you don't have any.
+2. Create new project
+> You will need an organization so select one in the popup which will be location of you project.
+> Create password for your database, past it somewhere safe, you will need it.
 
-Ensure the following are installed on your machine:
+3. To enable postgres to store vector datatypes we need to extend it.
 
--   [Node.js](https://nodejs.org/en/download/) (Version 12 or higher)
--   [npm](https://www.npmjs.com/get-npm) (generally bundled with Node.js) or [Yarn](https://yarnpkg.com/getting-started/install)
+4. Click on slq editor icon, the third menu icon from the top, and run the following query.
 
-### Installation
+```SQL
+create extension if not exists vector with schema public;
 
-1.  Clone this repository:
+-- Create a table to store your chunks
+create table chunks (
+  id bigserial primary key,
+  content text, -- corresponds to Document.pageContent
+  metadata jsonb, -- corresponds to Document.metadata
+  embedding vector(1536) -- 1536 works for OpenAI embeddings, change if needed
+);
 
-    `git clone https://github.com/your-username/nextjs-openai-boilerplate.git`
+-- Create a function to similarity search for chunks
+create function match_chunks (
+  query_embedding vector(1536),
+  match_count int DEFAULT null,
+  filter jsonb DEFAULT '{}'
+) returns table (
+  id bigint,
+  content text,
+  metadata jsonb,
+  similarity float
+)
+language plpgsql
+as $$
+#variable_conflict use_column
+begin
+  return query
+  select
+    id,
+    content,
+    metadata,
+    1 - (chunks.embedding <=> query_embedding) as similarity
+  from chunks
+  where metadata @> filter
+  order by chunks.embedding <=> query_embedding
+  limit match_count;
+end;
+$$;
 
-2.  Move to the project directory:
+-- Create a function to keyword search for chunks
+create function kw_match_chunks(query_text text, match_count int)
+returns table (id bigint, content text, metadata jsonb, similarity real)
+as $$
 
-    `cd nextjs-openai-boilerplate`
-
-3.  Install dependencies:
-
-    `npm install`
-
-    or
-
-    `yarn install`
-
-4.  Create a `.env.local` file in the root directory of the project and include your OpenAI API key:
-
-    `OPENAI_API_KEY=your_openai_api_key`
-
-    Substitute `your_openai_api_key` with your actual OpenAI API key. Your API key can be located in your [OpenAI Dashboard](https://platform.openai.com/account/api-keys).
-
-5.  Kick start the development server:
-
-    `npm run dev`
-
-    or
-
-    `yarn dev`
-
-6.  Access the application by navigating to [http://localhost:3000](http://localhost:3000/). The boilerplate application should be live now.
-
-OpenAI API: Generating Chat Completions
----------------------------------------
-
-The `openai.createChatCompletion()` function is an essential part of the OpenAI API, which enables developers to generate text utilizing machine learning models. Specifically, `createChatCompletion()` caters to the generation of completions for chat-oriented models, such as the GPT-3.5-turbo model (version gpt-3.5-turbo-0613), aimed at generating responses in a conversational format.
-
-### Usage
-
-```javascript
-const completion = await openai.createChatCompletion({
-  model: "gpt-3.5-turbo-0613",
-  messages: messages,
-  functions: functions,
-  temperature: 0,
-  max_tokens: 510,
-  top_p: 0,
-});
+begin
+return query execute
+format('select id, content, metadata, ts_rank(to_tsvector(content), plainto_tsquery($1)) as similarity
+from chunks
+where to_tsvector(content) @@ plainto_tsquery($1)
+order by similarity desc
+limit $2')
+using query_text, match_count;
+end;
+$$ language plpgsql;
 ```
 
-### Parameters
+## Configure supabase client and openai.
 
-> model: (string, required) - Indicates the name of the model to be utilized for generating completions. "gpt-3.5-turbo-0613" is used in this example, which is a chat-based language model.
+### Supabase
 
-> messages: (array of objects, required) - Indicates an array of message objects. Each object consists of a role ("system", "user", or "assistant") and content (the actual message text). Messages are processed in the order they appear in the array, and the assistant generates the response accordingly.
+You will `SUPABASE_PROJECT_ID` and supabase key `SUPABASE_KEY`.
 
-> functions: (array of objects, required) - Specifies an array of function objects that represent the assistant's capabilities.
+1. Click on settings icon on sidebar menu, copy the Reference ID and that's the project id.
 
-> temperature: (number, optional) - Determines the randomness of the generated completions. A higher value (e.g., 0.8) will produce more random outputs, while a lower value (e.g., 0.2) will make the outputs more deterministic.
+2. To get `SUPABASE_PROJECT_ID` click on API.
+> Copy only the key with `anon` and `public`.
 
-> max_tokens: (number, optional) - Determines the maximum length of the generated completion. If the limit is exceeded, the additional tokens will be discarded. However, bear in mind that very long outputs may require more time to process.
-
-> top_p: (number, optional) - This parameter is a part of nucleus sampling, a decoding method used in language models. It determines the minimum number of tokens to consider for generating a completion. A higher value will consider more tokens, increasing the randomness.
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-This project is licensed under the MIT License.
-
-## Disclaimer
-The use of the OpenAI API and the output it generates depends on the usage policies set by OpenAI. Make sure to review the OpenAI use case policy before using this boilerplate to build applications.
+### OpenAI
+`OPENAI_API_KEY`
