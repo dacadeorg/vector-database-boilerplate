@@ -1,0 +1,24 @@
+{
+  "name": "nextjs-openai-boilerplate",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generateTXT": "node scripts/generateCodeTXT.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.33.2",
+    "dotenv": "^16.0.3",
+    "langchain": "^0.0.146",
+    "next": "^13.3.0",
+    "openai": "^3.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-mde": "^11.5.0",
+    "showdown": "^2.1.0",
+    "uuid": "^9.0.0"
+  }
+}
