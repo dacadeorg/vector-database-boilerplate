@@ -2,7 +2,7 @@
 const SubmitButton = ({ onClick }) => {
   return (
     <button type="submit" className="submit-button" onClick={onClick}>
-      Submit
+      Vectorize
     </button>
   );
 };

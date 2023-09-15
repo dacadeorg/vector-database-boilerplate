@@ -37,11 +37,6 @@ export default function Chat() {
               currentNote={{ body: articleBody }}
               updateNote={(value) => setArticleBody(value)}
             />
-            <TextInput
-              value={inputValue}
-              onChange={handleInputChange}
-              placeholder={"Prompt it 😀"}
-            />
             <SubmitButton onClick={saveAndUpload} disabled={loading} />
           </form>
         </div>
