@@ -74,8 +74,7 @@ $$ language plpgsql;
 ## Configure supabase client and openai.
 
 ### Supabase
-
-You will `SUPABASE_PROJECT_ID` and supabase key `SUPABASE_KEY`.
+`SUPABASE_PROJECT_ID` `SUPABASE_KEY` are required environment.
 
 1. Click on settings icon on sidebar menu, copy the Reference ID and that's the project id.
 
@@ -83,4 +82,4 @@ You will `SUPABASE_PROJECT_ID` and supabase key `SUPABASE_KEY`.
 > Copy only the key with `anon` and `public`.
 
 ### OpenAI
-`OPENAI_API_KEY`
+`OPENAI_API_KEY` assign it with you openapi key.
