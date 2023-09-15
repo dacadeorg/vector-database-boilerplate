@@ -10,8 +10,6 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 
 1. Create an account on [supabase.com](https://supabase.com/dashboard/sign-in?) if you don't have any.
 2. Create new project
-> You will need an organization so select one in the popup which will be location of you project.
-> Create password for your database, past it somewhere safe, you will need it.
 
 3. To enable postgres to store vector datatypes we need to extend it.
 
