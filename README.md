@@ -6,26 +6,34 @@ But with a vector database, you organize them based on their similarities. Each 
 
 So, if you want to find all the words related to 'happy,' you just look in the 'happy' place, and the vector database quickly shows you all the words that are similar in meaning.
 
+
 ## Step by step to create a vector database on Supabase.
 
 1. Create an account on [supabase.com](https://supabase.com/dashboard/sign-in?) if you don't have any.
 
 2. Create new project
 
+### Home page to create new Project
 ![Home Page](./public/images/Home-page.png)
 
+### Click on the button to create a new project
 ![Create a new project](./public/images/Create-new-project.png)
 
+### Form to create a new project
 ![Create new project form](./public/images/Create-project-form.png)
 
+
+### Click on create new project Button
 ![Click button to create the project](./public/images/Button-to-create.png)
 
 3. To enable postgres to store vector datatypes we need to extend it.
 
-4. Click on slq editor icon, the third menu icon from the top, and run the following query.
+> Click on slq editor icon, the third menu icon from the top, and run the following query.
 
-![Button to the sql](./public/images/Button-tosql.png)
+### Click the SQL editor button to go to the terminal
+![Button to the sql](./public/images/Button-to-sql.png)
 
+### Copy the code in the SQL editor and run
 ![Terminal in the sql](./public/images/SQL-final-run.png)
 
 ```SQL
@@ -84,19 +92,72 @@ end;
 $$ language plpgsql;
 ```
 
+
 ## Configure supabase client and openai.
 
 ### Supabase
 `SUPABASE_PROJECT_ID` `SUPABASE_KEY` are required environment.
 
+
 1. Click on settings icon on sidebar menu, copy the Reference ID and that's the project id.
+
+### Click on project settings icon on sidebar menu
+![Setting](./public/images/project-setting.png)
+
+### Copy the URL as the project ID
+![Project ID](./public/images/Focused-api.png)
+
 
 2. To get `SUPABASE_PROJECT_ID` click on API.
 > Copy only the key with `anon` and `public`.
 
+### Copy the project ID as the KEY
+![Project API key](./public/images/API-key.png)
+
 ### OpenAI
-`OPENAI_API_KEY` assign it with you openapi key.
+`OPENAI_API_KEY` assign it with your openapi key.
 
+## Getting Started
 
---- run the project
+### Prerequisites
+
+Ensure the following are installed on your machine:
+
+-   [Node.js](https://nodejs.org/en/download/) (Version 12 or higher)
+-   [npm](https://www.npmjs.com/get-npm) (generally bundled with Node.js) or [Yarn](https://yarnpkg.com/getting-started/install)
+
+### Installation
+
+1.  Clone this repository:
+
+    `git clone https://github.com/your-username/vector-database-boilerplate.git`
+
+2.  Move to the project directory:
+
+    `cd vector-database-boilerplate`
+
+3.  Install dependencies:
+
+    `npm install`
+
+    or
+
+    `yarn install`
+
+4.  Create a `.env.local` file in the root directory of the project and include your OpenAI API key:
+
+    `OPENAI_API_KEY=your_openai_api_key`
+
+    Substitute `your_openai_api_key` with your actual OpenAI API key. Your API key can be located in your [OpenAI Dashboard](https://platform.openai.com/account/api-keys).
+
+5.  Kick start the development server:
+
+    `npm run dev`
+
+    or
+
+    `yarn dev`
+
+6.  Access the application by navigating to [http://localhost:3000](http://localhost:3000/). The boilerplate application should be live now.
+
 
