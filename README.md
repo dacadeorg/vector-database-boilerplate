@@ -12,21 +12,21 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 
 2. Create new project
 
-![Home Page](https://github.com/sezeranoJchrisostome/vector-database-boilerplate/tree/main/public/images/Home-page.png)
+![Home Page](./public/images/Home-page.png)
 
-![Create a new project](https://github.com/sezeranoJchrisostome/vector-database-boilerplate/tree/main/public/images/Create-new-project.png)
+![Create a new project](./public/images/Create-new-project.png)
 
-![Create new project form](https://github.com/sezeranoJchrisostome/vector-database-boilerplate/tree/main/public/images/Create-project-form.png)
+![Create new project form](./public/images/Create-project-form.png)
 
-![Click button to create the project](https://github.com/sezeranoJchrisostome/vector-database-boilerplate/tree/main/public/images/Button-to-create.png)
+![Click button to create the project](./public/images/Button-to-create.png)
 
 3. To enable postgres to store vector datatypes we need to extend it.
 
 4. Click on slq editor icon, the third menu icon from the top, and run the following query.
 
-![Button to the sql](https://github.com/sezeranoJchrisostome/vector-database-boilerplate/tree/main/public/images/Button-tosql.png)
+![Button to the sql](./public/images/Button-tosql.png)
 
-![Terminal in the sql](https://github.com/sezeranoJchrisostome/vector-database-boilerplate/tree/main/public/images/SQL-final-run.png)
+![Terminal in the sql](./public/images/SQL-final-run.png)
 
 ```SQL
 create extension if not exists vector with schema public;
