@@ -20,6 +20,7 @@ body {
   font-weight: 400;
   background-size: cover;
   background-repeat: none;
+  overflow: hidden;
 }
 
 .wrapper {
@@ -37,6 +38,7 @@ body {
   left: 50%;
   width: 95%;
   height: 75%;
+  overflow: hidden;
   background-color: white;
   transform: translate(-50%, -50%);
   display: grid;
@@ -118,12 +120,14 @@ form {
   float: left;
   width: 100%;
   height: 100%;
+  overflow-y: hidden;
 }
 .container .right .chat {
   position: relative;
   display: none;
-  overflow: hidden;
+  overflow: auto;
   padding: 0 35px 92px;
+  padding-bottom: 12rem;
   height: calc(100% - 48px);
   /* justify-content: flex-end; */
   flex-direction: column;
@@ -249,3 +253,28 @@ form {
   right: 0;
 }
 
+@keyframes spin {
+  to {
+      transform: rotate(360deg);
+  }
+}
+.animate-spin {
+  animation: spin 1s linear infinite;
+  color: rgb(250, 250, 250);
+}
+
+.last-message {
+  margin-bottom: 10rem !important;
+}
+
+.watermark {
+  color: rgba(128, 128, 128, 0.168);
+  opacity: 10;
+  font-size: 15rem;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate( -50% , -50%) rotate(-45deg);
+  transform-origin: center;
+  font-weight: 800;
+}
