@@ -26,7 +26,7 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 ### Click on create new project Button
 ![Click button to create the project](./public/images/Button-to-create.png)
 
-3. To enable postgres to store vector datatypes we need to extend it.
+### To enable postgres to store vector datatypes we need to extend it.
 
 > Click on slq editor icon, the third menu icon from the top, and run the following query.
 
@@ -93,6 +93,11 @@ $$ language plpgsql;
 ```
 
 
+<<<<<<< HEAD
+=======
+
+> After running the query, no rows will be returns and you will have a success message.
+>>>>>>> 94f56bd (feat: adds script to generate and upload Embending)
 ## Configure supabase client and openai.
 
 ### Supabase

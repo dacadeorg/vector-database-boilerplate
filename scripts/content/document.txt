@@ -1,0 +1,9 @@
+Bun is a JavaScript runtime.
+Bun is a new JavaScript runtime built from scratch to serve the modern JavaScript ecosystem. It has three major design goals:
+
+Speed. Bun starts fast and runs fast. It extends JavaScriptCore, the performance-minded JS engine built for Safari. As computing moves to the edge, this is critical.
+Elegant APIs. Bun provides a minimal set of highly-optimimized APIs for performing common tasks, like starting an HTTP server and writing files.
+Cohesive DX. Bun is a complete toolkit for building JavaScript apps, including a package manager, test runner, and bundler.
+Bun is designed as a drop-in replacement for Node.js. It natively implements hundreds of Node.js and Web APIs, including fs, path, Buffer and more.
+
+The goal of Bun is to run most of the world's server-side JavaScript and provide tools to improve performance, reduce complexity, and multiply developer productivity.
