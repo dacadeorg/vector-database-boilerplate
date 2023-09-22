@@ -9,6 +9,7 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 ## Step by step to create a vector database on Supabase.
 
 1. Create an account on [supabase.com](https://supabase.com/dashboard/sign-in?) if you don't have any.
+
 2. Create new project
 
 ![Home Page](https://github.com/sezeranoJchrisostome/vector-database-boilerplate/tree/main/public/Home-page.png)
