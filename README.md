@@ -236,10 +236,10 @@ const answer = await chain.call({ question: question, chat_history: [] });
 
 
 /*
-  Last but lant least, we response the result to the client
+Finally, we deliver the response to the client.
 */
 
-  return res.status(200).json({ data: answer });
+return res.status(200).json({ data: answer });
 ```
 
 
