@@ -11,9 +11,16 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 1. Create an account on [supabase.com](https://supabase.com/dashboard/sign-in?) if you don't have any.
 2. Create new project
 
+![Home Page](./Home-page.png)
+![Create a new project](./Create-new-project.png)
+![Create new project form](./Create-project-form.png)
+![Click button to create the project](./Button-to-create.png)
+
 3. To enable postgres to store vector datatypes we need to extend it.
 
 4. Click on slq editor icon, the third menu icon from the top, and run the following query.
+![Button to the sql](./Button-tosql.png)
+![Terminal in the sql](./SQL-final-run.png)
 
 ```SQL
 create extension if not exists vector with schema public;
@@ -83,3 +90,7 @@ $$ language plpgsql;
 
 ### OpenAI
 `OPENAI_API_KEY` assign it with you openapi key.
+
+
+--- run the project
+
