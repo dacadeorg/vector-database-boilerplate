@@ -6,16 +6,14 @@ But with a vector database, you organize them based on their similarities. Each 
 
 So, if you want to find all the words related to 'happy,' you just look in the 'happy' place, and the vector database quickly shows you all the words that are similar in meaning.
 
-
-> Embeddings are like special codes, called vectors, that computers use to understand words and phrases better. These vectors are like arrows pointing in different directions in a big space. Computers use these arrows to figure out which words are similar in meaning and how words can change their meanings in different situations. We use these vector codes to make computers read and understand text, and they're really important for making computers do things like understand language and translate between languages, example `[-0.018704185,-0.010303496,0.016113129,-0.005418276,-0.007138899]`. find more [example](./scripts/content/document.csv). 
-
+> Embeddings are like special codes, called vectors, that computers use to understand words and phrases better. These vectors are like arrows pointing in different directions in a big space. Computers use these arrows to figure out which words are similar in meaning and how words can change their meanings in different situations. We use these vector codes to make computers read and understand text, and they're really important for making computers do things like understand language and translate between languages, for example `[-0.018704185,-0.010303496,0.016113129,-0.005418276,-0.007138899]`. find more [examples](./scripts/content/document.csv).
 
 ## Goals
 
-- Create vector database on supabase.
-- Create embeddings with [langchain](https://js.langchain.com/docs/get_started/introduction/).
-- Upload embeddings on supabase by using [langchain](https://js.langchain.com/docs/get_started/introduction/).
-- Query vector database and use OpenAI to get readble content out of our vectores/embeddings.
+-   Create vector database on supabase.
+-   Create embeddings with [langchain](https://js.langchain.com/docs/get_started/introduction/).
+-   Upload embeddings on supabase by using [langchain](https://js.langchain.com/docs/get_started/introduction/).
+-   Query vector database and use OpenAI to get readable content out of our vectors/embeddings.
 
 ## Step by step to create a vector database on Supabase.
 
@@ -23,7 +21,7 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 
 2. Create new project
 
-### Home page to create new Project
+### Home page for creating new Project
 
 ![Home Page](./public/images/Home-page.png)
 
@@ -31,7 +29,7 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 
 ![Create a new project](./public/images/Create-new-project.png)
 
-### Form to create a new project
+### Form for creating a new project
 
 ![Create new project form](./public/images/Create-project-form.png)
 
@@ -39,7 +37,7 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 
 ![Click button to create the project](./public/images/Button-to-create.png)
 
-### To enable postgres to store vector datatypes we need to extend it.
+#### To enable postgres to store vector datatypes we need to extend it.
 
 > Click on slq editor icon, the third menu icon from the top, and run the following query.
 
@@ -47,9 +45,11 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 
 ![Button to the sql](./public/images/Button-to-sql.png)
 
-### Copy the follow SQL query in your project SQL editor and execute them.
+### Copy the following SQL query in your project SQL editor and execute them.
 
 ```SQL
+
+-- A query to create an extension if it didn't exist before
 create extension if not exists vector with schema public;
 
 -- Create a table to store your chunks
@@ -117,14 +117,14 @@ $$ language plpgsql;
 
 Ensure the following are installed on your machine:
 
-- [Node.js](https://nodejs.org/en/download/) (Version 12 or higher)
-- [npm](https://www.npmjs.com/get-npm) (generally bundled with Node.js) 
+-   [Node.js](https://nodejs.org/en/download/) (Version 12 or higher)
+-   [npm](https://www.npmjs.com/get-npm) (generally bundled with Node.js)
 
 ### Installation
 
 1.  Clone this repository:
 
-    `git clone repo url`
+    `git clone <repo url>`
 
 2.  Move to the project directory:
 
@@ -142,65 +142,62 @@ Ensure the following are installed on your machine:
 
 ### Supabase
 
-`SUPABASE_REFERENCE_ID` and `SUPABASE_PROJECT_API_KEY` are required environment for supabase client, to get them follow the following steps.
+`SUPABASE_REFERENCE_ID` and `SUPABASE_PROJECT_API_KEY` are required environment variables for supabase client, to get them follow the following steps.
 
-1. Click on settings icon on sidebar menu, copy the Reference ID and in your env.local file assgin it to `SUPABASE_REFERENCE_ID``.
+1. Click on settings icon on sidebar menu, copy the Reference ID and in your `.env` file assign it to `SUPABASE_REFERENCE_ID``.
 
 ![Setting](./public/images/project-setting.png)
 
-2. To get `SUPABASE_PROJECT_API_KEY` click on API, click copy and assign it to your `SUPABASE_PROJECT_API_KEY` in you `.env.loca`.
-  > Copy only the key with `anon` and `public` label.
+2. To get `SUPABASE_PROJECT_API_KEY` click on [API](https://supabase.com/dashboard/project/ktrkrjsmtaomgqtvyppm/settings/api), click copy, and assign it to your `SUPABASE_PROJECT_API_KEY` in you `.env` file.
+    > Copy only the key with `anon` and `public` label.
 
 ![Project API key](./public/images/API-key.png)
 
-5.  Kick start the development server:
+5.  Kickstart the development server:
 
-  `npm run dev`
+`npm run dev`
 
 6.  Access the application by navigating to [http://localhost:3000](http://localhost:3000/). The boilerplate application should be live now.
 
 ## Create embeddings with langchain.
 
-Langchain provides methodes that makes the work very easy when we are dealing with large language models.
+Langchain provides methods that make the work very easy when we are dealing with large language models.
 
-`RecursiveCharacterTextSplitter()`: will help us to split the content into chunks and those content will be transiformend into vectors or embeddings, at this point they are called documents.
+`RecursiveCharacterTextSplitter()`: will help us to split the content into chunks and that content will be transformed into vectors or embeddings, at this point they are called documents.
 
-`SupabaseVectorStore`: This is an instance that megre our supabase client with the logic langachain and openAI mode that converts documents into vectors/embeddings and langchain uploads the to supabase. 
+`SupabaseVectorStore`: This is an instance that merge our supabase client with the logic langachain and openAI mode that converts documents into vectors/embeddings and langchain uploads them to supabase.
 
 ```js
 await SupabaseVectorStore.fromDocuments(
-  splitedDocs,
-  new OpenAIEmbeddings({
-    openAIApiKey: process.env.OPENAI_API_KEY,
-  }),
-  {
-    client: supabase,
-    tableName: "chunks",
-  }
+    splitedDocs,
+    new OpenAIEmbeddings({
+        openAIApiKey: process.env.OPENAI_API_KEY,
+    }),
+    {
+        client: supabase,
+        tableName: "chunks",
+    }
 );
 ```
 
 ### Generate vectors from txt file.
 
-
 ```bash
 node ./scripts/uploadEmbending.js
 ```
+
 > Don't worry about this warning. `No storage option exists to persist the session, which may result in unexpected behavior when using auth.
 If you want to set persistSession to true, please provide a storage option or you may set persistSession to false to disable this warning.` only wait until you see `Uploaded` logged in the terminal.
 
-
 ### Query our vector database.
+
 Head over to where our app is running [http://localhost:3000](http://localhost:3000/), and ask any query related to bun, or if you changed the content inside the [document.txt](./scripts/content/document.txt) try to query anything about them.
 
-
-#### Background procces.
+#### Background proccess.
 
 > ./api/openai
 
-
 ```js
-
 /*
 
 This line creates an instance of the SupabaseVectorStore class by calling the fromExistingIndex method. It takes two arguments:
@@ -211,8 +208,8 @@ The second argument is an object with properties client, tableName, and queryNam
 */
 
 const vectorStore = await SupabaseVectorStore.fromExistingIndex(
-  new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }), 
-  { client: supabase, tableName: "chunks", queryName: "match_chunks" }
+    new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }),
+    { client: supabase, tableName: "chunks", queryName: "match_chunks" }
 );
 
 /*
@@ -223,8 +220,10 @@ The second argument is the result of calling the asRetriever method on the vecto
 
 */
 
-const chain = ConversationalRetrievalQAChain.fromLLM(model, vectorStore.asRetriever());
-
+const chain = ConversationalRetrievalQAChain.fromLLM(
+    model,
+    vectorStore.asRetriever()
+);
 
 /*
 
@@ -234,12 +233,9 @@ The chat_history property is an array that can be used to provide previous conve
 */
 const answer = await chain.call({ question: question, chat_history: [] });
 
-
 /*
 Finally, we deliver the response to the client.
 */
 
 return res.status(200).json({ data: answer });
 ```
-
-
