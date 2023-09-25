@@ -48,7 +48,9 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 ### Copy the following SQL query in your project SQL editor and execute them.
 
 ```SQL
-Create extension if not exists vector with schema public;
+
+-- A query to create an extension if it didn't exist before
+create extension if not exists vector with schema public;
 
 -- Create a table to store your chunks
 create table chunks (
