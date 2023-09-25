@@ -6,7 +6,7 @@ But with a vector database, you organize them based on their similarities. Each 
 
 So, if you want to find all the words related to 'happy,' you just look in the 'happy' place, and the vector database quickly shows you all the words that are similar in meaning.
 
-> Embeddings are like special codes, called vectors, that computers use to understand words and phrases better. These vectors are like arrows pointing in different directions in a big space. Computers use these arrows to figure out which words are similar in meaning and how words can change their meanings in different situations. We use these vector codes to make computers read and understand text, and they're really important for making computers do things like understand language and translate between languages, example `[-0.018704185,-0.010303496,0.016113129,-0.005418276,-0.007138899]`. find more [example](./scripts/content/document.csv).
+> Embeddings are like special codes, called vectors, that computers use to understand words and phrases better. These vectors are like arrows pointing in different directions in a big space. Computers use these arrows to figure out which words are similar in meaning and how words can change their meanings in different situations. We use these vector codes to make computers read and understand text, and they're really important for making computers do things like understand language and translate between languages, for example `[-0.018704185,-0.010303496,0.016113129,-0.005418276,-0.007138899]`. find more [examples](./scripts/content/document.csv).
 
 ## Goals
 
@@ -21,7 +21,7 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 
 2. Create new project
 
-### Home page to create new Project
+### Home page for creating new Project
 
 ![Home Page](./public/images/Home-page.png)
 
@@ -29,7 +29,7 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 
 ![Create a new project](./public/images/Create-new-project.png)
 
-### Form to create a new project
+### Form for creating a new project
 
 ![Create new project form](./public/images/Create-project-form.png)
 
@@ -37,7 +37,7 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 
 ![Click button to create the project](./public/images/Button-to-create.png)
 
-### To enable postgres to store vector datatypes we need to extend it.
+#### To enable postgres to store vector datatypes we need to extend it.
 
 > Click on slq editor icon, the third menu icon from the top, and run the following query.
 
@@ -48,7 +48,7 @@ So, if you want to find all the words related to 'happy,' you just look in the '
 ### Copy the following SQL query in your project SQL editor and execute them.
 
 ```SQL
-create extension if not exists vector with schema public;
+Create extension if not exists vector with schema public;
 
 -- Create a table to store your chunks
 create table chunks (
