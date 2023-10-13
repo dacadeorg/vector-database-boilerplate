@@ -232,7 +232,7 @@ On Codespace, installation is automatically triggered.
 
 6. Access the application by navigating to [http://localhost:3000](http://localhost:3000/). The boilerplate application should now be live.
 
-## Interface.
+## User interface.
  ![Settings](./public/images/output.png)
 
 ## Create Embeddings with Langchain
