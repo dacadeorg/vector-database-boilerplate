@@ -1,5 +1,5 @@
 // Import necessary libraries and modules
-const csvFilePath = "./scripts/content/document.txt";
+const contentFilePath = "./scripts/content/document.txt";
 const supabase = require("@supabase/supabase-js");
 const dotEnv = require("dotenv");
 const OpenAIEmbeddings = require("langchain/embeddings/openai").OpenAIEmbeddings;
@@ -60,10 +60,10 @@ const generateAndStoreEmbedding = async function (rawDocs, fields) {
     }),
     {
       client: supabaseClient,
-      tableName: "chunks",
+      tableName: "documents",
     }
   );
 };
 
-// Invoke the main function with the provided CSV file path
-(async () => main(csvFilePath))();
+// Invoke the main function with the provided content
+(async () => main(contentFilePath))();

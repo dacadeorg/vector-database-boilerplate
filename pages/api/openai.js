@@ -42,8 +42,8 @@ export default async function (req, res) {
     new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }),
     {
       client: supabase,
-      tableName: "chunks",
-      queryName: "match_chunks",
+      tableName: "documents",
+      queryName: "match_documents",
     }
   );
 

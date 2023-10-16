@@ -37,11 +37,11 @@ export default async function handler(req, res) {
 const generateAndStoreEmbedding = async (rawDocs, fields) => {
   // Create a Recursive Character Text Splitter instance with specific configuration
   const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 400,
+    documentsize: 400,
     chunkOverlap: 2,
   });
 
-  // Split the raw documents into smaller chunks
+  // Split the raw documents into smaller documents
   const docs = await textSplitter.splitDocuments(rawDocs);
 
   // Modify the metadata of each chunked document by adding specified fields
@@ -58,7 +58,7 @@ const generateAndStoreEmbedding = async (rawDocs, fields) => {
     }),
     {
       client: supabase,
-      tableName: "chunks",
+      tableName: "documents",
     }
   );
 };
