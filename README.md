@@ -3,6 +3,14 @@ Welcome to the Vector Database Course! In this course, you'll learn how to creat
 
 <!-- TODO: Add usecases -->
 
+# Usecases
+
+1. **Natural Language Understanding (NLU):** Embeddings can be used to convert text into numerical representations that capture the meaning and context of the text. These embeddings can be used in NLU tasks, such as sentiment analysis, named entity recognition, and text classification.
+
+2. **Search Engines:** Embeddings can be employed to enhance the performance of search engines. By converting user queries and indexed documents into embeddings, search engines can deliver more accurate and relevant search results.
+
+> In this vector boilplate  we will use the vector database to extend the knowledge of openAI models which by now they only internet information up to 2020.
+
 ### What You Will Learn:
 Throughout this course, you will acquire the following essential skills:
 
@@ -168,15 +176,11 @@ The boilerplate application is a simple chatbot that uses OpenAI's GPT-3 model t
 
 ### 4.1 `pages/api/openai.js`
 
-`pages/api/openai.js`: This part of the program helps us find similar things by understanding the context in our data.
+`pages/api/openai.js `: With the help of langchain this endpoint enables us to make similaty search to get meaningful context out of our vector store.
 
-```javascript
-new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY })
-```
+`new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY })`: this portion of code will initialize openai with `text-embedding-ada-002`.
 
-This code initializes OpenAI using the `text-embedding-ada-002` model.
-
-The image below from openai shows how `text-embedding-ada-002` works.
+This is how `text-embedding-ada-002` is working.
 ![text-embedding-ada-002 embeddings output](https://github.com/dacadeorg/vector-database-boilerplate/blob/main/public/vectors-3.svg)
 
 
@@ -191,24 +195,30 @@ The image below from openai shows how `text-embedding-ada-002` works.
   );
 ```
 
-```javascript
+`vectorStore.asRetriever()`: Here we are using asRetriever for to load our vector store.
 
+```javascript
+ // Here langchain will use `text-davinci-003` by default.
  const chain = ConversationalRetrievalQAChain.fromLLM(
     model,
     vectorStore.asRetriever()
   );
 
+  /**
+   * 
+   *  Now that we have our vector store loaded with `text-davinci-003` model. We can now query it
+   *  with chain.call() which receives an object with question and chat_history.
+   *  chat_history helps the model to be aware of the chat history, [ { role: "assistant", content: "" }, { role: "user", content: "" }]
+   * 
+   * */
   const answer = await chain.call({ question: question, chat_history: [] });
-
 ```
 
 ### 4.2 `pages/api/embed.js`
 
-Langchain provides methods that make the work very easy when dealing with large language models.
+`RecursiveCharacterTextSplitter()`: will help you split the content into chunks, and that content will be transformed into vectors.
 
-`RecursiveCharacterTextSplitter()`: will help you split the content into chunks, and that content will be transformed into vectors or embeddings.
-
-`SupabaseVectorStore`: This is an instance that merges your Supabase client with the logic of Langchain and the OpenAI model that converts documents into vectors/embeddings. Langchain uploads them to Supabase.
+`SupabaseVectorStore`: This is an instance that merges your Supabase client with the logic of Langchain and the OpenAI model that converts documents into vectors. Langchain uploads them to Supabase.
 
 ```javascript
 await SupabaseVectorStore.fromDocuments(
