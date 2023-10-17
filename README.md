@@ -168,15 +168,49 @@ The boilerplate application is a simple chatbot that uses OpenAI's GPT-3 model t
 
 ### 4.1 `pages/api/openai.js`
 
+`pages/api/openai.js`: This part of the program helps us find similar things by understanding the context in our data.
+
+```javascript
+new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY })
+```
+
+This code initializes OpenAI using the `text-embedding-ada-002` model.
+
+The image below from openai shows how `text-embedding-ada-002` works.
+![text-embedding-ada-002 embeddings output](https://github.com/dacadeorg/vector-database-boilerplate/blob/main/public/vectors-3.svg)
+
+
+```javascript
+  const vectorStore = await SupabaseVectorStore.fromExistingIndex(
+    new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }),
+    {
+      client: supabase,
+      tableName: "documents",
+      queryName: "match_documents",
+    }
+  );
+```
+
+```javascript
+
+ const chain = ConversationalRetrievalQAChain.fromLLM(
+    model,
+    vectorStore.asRetriever()
+  );
+
+  const answer = await chain.call({ question: question, chat_history: [] });
+
+```
+
 ### 4.2 `pages/api/embed.js`
 
 Langchain provides methods that make the work very easy when dealing with large language models.
 
-`RecursiveCharacterTextSplitter()`: will help you split the content into chunks, and that content will be transformed into vectors or embeddings. At this point, they are called documents.
+`RecursiveCharacterTextSplitter()`: will help you split the content into chunks, and that content will be transformed into vectors or embeddings.
 
 `SupabaseVectorStore`: This is an instance that merges your Supabase client with the logic of Langchain and the OpenAI model that converts documents into vectors/embeddings. Langchain uploads them to Supabase.
 
-```js
+```javascript
 await SupabaseVectorStore.fromDocuments(
     splittedDocs,
     new OpenAIEmbeddings({
@@ -184,7 +218,7 @@ await SupabaseVectorStore.fromDocuments(
     }),
     {
         client: supabase,
-        tableName: "chunks",
+        tableName: "documents",
     }
 );
 ```

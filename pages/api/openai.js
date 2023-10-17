@@ -37,7 +37,7 @@ export default async function (req, res) {
     openAIApiKey: process.env.OPENAI_API_KEY,
     streaming: false,
   });
-
+  
   const vectorStore = await SupabaseVectorStore.fromExistingIndex(
     new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }),
     {
