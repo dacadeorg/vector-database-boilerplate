@@ -16,7 +16,7 @@ Throughout this course, you will acquire the following essential skills:
 2. **Embedding Generation and Integration**: Learn how to generate embeddings to transform text input into vectors and integrate them into your vector database.
 3. **Vector Database Querying**: You will learn how to query your vector database to retrieve vectors and extend OpenAI's GPT-3 models knowledge with your vectors.
 
-### What are Vectors and Embeddings?
+### What are Vectors or Embeddings?
 Embeddings are a form of feature engineering used predominantly in machine learning to convert text or other data into numerical vectors. These vectors capture semantic meaning and contextual relationships among words or items, making it easier for machine learning algorithms to understand text. Various algorithms like Word2Vec, GloVe, and BERT offer different methods for generating embeddings.
 
 For instance, in the case of the word 'happy', it gets converted into a numerical array, say `[0.12, 0.25, -0.47, ...]`, in a 300-dimensional space. This high-dimensionality allows the model to understand nuanced relationships, like how 'happy' is closer in meaning to 'joyful' than to 'sad'.
