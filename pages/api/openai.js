@@ -5,7 +5,6 @@ import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { OpenAI } from "langchain/llms/openai";
 import { Configuration, OpenAIApi } from "openai";
 import { supabase } from "@/utils/supabase";
-import { CallbackManager } from "langchain/callbacks";
 
 // Create a configuration object with the OpenAI API key
 const configuration = new Configuration({
@@ -33,7 +32,7 @@ export default async function (req, res) {
   const question = req.body.payload || "";
 
   const model = new OpenAI({
-    temperature: 0,
+    temperature: 1,
     openAIApiKey: process.env.OPENAI_API_KEY,
     streaming: false,
   });

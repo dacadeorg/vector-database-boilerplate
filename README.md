@@ -7,7 +7,7 @@ Welcome to the Vector Database Course! In this course, you'll learn how to creat
 
 2. **Search Engines:** Embeddings can be employed to enhance the performance of search engines. By converting user queries and indexed documents into embeddings, search engines can deliver more accurate and relevant search results.
 
-> In this vector boilplate  we will use the vector database to extend the knowledge of openAI models which by now they only internet information up to 2020.
+> In this vector boilplate  we will use the vector database to extend the knowledge of openAI models which by now they only internet information up to 2021.
 
 ### What You Will Learn:
 Throughout this course, you will acquire the following essential skills:
@@ -51,7 +51,6 @@ Here are the technologies we will be using in this tutorial:
 1. Set Up Your Supabase Project
 2. Set Up the Next.js Boilerplate
 3. Create 
-
 
 ## 1. Set Up Your Supabase Project
 
@@ -101,6 +100,7 @@ Here are the technologies we will be using in this tutorial:
 Now that you have created your own project and vector database, we can proceed to integrate it, create embeddings, upload them, and query the vector database.
 
 ## 2. Set Up the Next.js Boilerplate
+
 You can either use Codespaces or your local machine to set up the boilerplate. If you are using Codespaces, skip to the next section. Otherwise, follow the steps below.
 
 ### 2.1.1 Option 1: Codespaces Boilerplate Setup
@@ -109,7 +109,9 @@ GitHub Codespaces provides a complete, ready-to-use  cloud-based dev environment
 1. Create a GitHub account if you don't have one.
 
 2. To create a new Codespace with the boilerplate, go to the 
+
 [Vectordatabase-boilerplate repository](](https://github.com/dacadeorg/vector-database-boilerplate)).
+
 3. Click on the "Use this template" button and then, click on "Open with Codespaces." 
    
 When opening the Codespace, it will automatically install the dependencies.
@@ -184,55 +186,100 @@ After after vectorizing bun contents.
 
 ### 4.1 `pages/api/openai.js`
 
-`pages/api/openai.js `: With the help of langchain this endpoint enables us to make similaty search to get meaningful context out of our vector store.
+This is an endpoint that enables to query openai model. 
 
-`new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY })`: this portion of code will initialize openai with `text-embedding-ada-002`.
+This file holds handler functions that is responsible for accepting request from client and respond back with an actual answer from openai model.
 
-This is how `text-embedding-ada-002` is working.
-![Imgur](https://i.imgur.com/TADgWR5.png)
-
-
-```javascript
-  const vectorStore = await SupabaseVectorStore.fromExistingIndex(
-    new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }),
-    {
-      client: supabase,
-      tableName: "documents",
-      queryName: "match_documents",
-    }
-  );
+```js
+export default async function (req, res) {}
 ```
 
-`vectorStore.asRetriever()`: Here we are using asRetriever for to load our vector store.
+Inside our handler function if we have cofingured our openai if not we through back an error.
 
-```javascript
- // Here langchain will use `text-davinci-003` by default.
- const chain = ConversationalRetrievalQAChain.fromLLM(
-    model,
-    vectorStore.asRetriever()
+```js
+if (!configuration.apiKey) {}
+```
+
+Here we grab payload that came from the request body as question;
+
+```js
+const question = req.body.payload || "";
+```
+
+Here we are initialising the OpenAI with an object parameter with three items: `temperature`, `openAIApiKey`, `stream`.
+
+```js
+const model = new OpenAI({
+  temperature: 0, // values are 0 up to 1, this value responsible of how creative model should in terms of the response
+  openAIApiKey: process.env.OPENAI_API_KEY,
+  streaming: false, // If you want stream response you can set it true however this boilblate does not support streamed response.
+});
+```
+
+Here we are initializing vector store with supabase client and with table where we stored our vectors, this is responsible for giving as access to the voctor database.
+
+```js
+ const vectorStore = await SupabaseVectorStore.fromExistingIndex(
+    new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }) // By default here openai is initialized with text-embedding-ada-002,
+  {
+    client: supabase,
+    tableName: "documents",
+    queryName: "match_documents",
+  }
+);
+
+```
+
+Here we initialize chain that is responsible for extracting the context from the our vector and with `text-davinci-003` we get complition text which will be the answer/query of the payload with sent.
+
+```js
+  const chain = ConversationalRetrievalQAChain.fromLLM(
+    model, // text-davinci-003 is used here by default if is not specified in the model object above.
+    vectorStore.asRetriever(), // This will be the context that contains the knowledge of the we nee
   );
 
-  /**
-   * 
-   *  Now that we have our vector store loaded with `text-davinci-003` model. We can now query it
-   *  with chain.call() which receives an object with question and chat_history.
-   *  chat_history helps the model to be aware of the chat history, [ { role: "assistant", content: "" }, { role: "user", content: "" }]
-   * 
-   * */
+``` 
+
+Finally, we make our chain call to get the response.
+
+> Note: chat_history: [] is not required to have elements however if you pass the chat history the model will be aware of the history. the format should be like this. ` [ { role: "assistant', content: "" }, { role: "user', content: "" } ] `;
+
+```js
   const answer = await chain.call({ question: question, chat_history: [] });
 ```
 
+
 ### 4.2 `pages/api/embed.js`
 
-`RecursiveCharacterTextSplitter()`: will help you split the content into chunks, and that content will be transformed into vectors.
+`pages/api/embed.js` This is endpoint is responsible for two major role transforming our conent into vectors and uploading them to our vector database.
 
-`SupabaseVectorStore`: This is an instance that merges your Supabase client with the logic of Langchain and the OpenAI model that converts documents into vectors. Langchain uploads them to Supabase.
+In this file we have two function first function that handle the content that came from the request payload and second function that is invoked inside the handler function to generate vectors and store vector them.
+
+#### 4.2.1 Handler function
+
+`RecursiveCharacterTextSplitter()`: will help us split the content into chunks, and those chunks will be transformed into vectors, that are going to be stored in our vector database, and each chunk is called a document.
+More information can be found [Here.](https://js.langchain.com/docs/modules/data_connection/document_transformers/text_splitters/recursive_text_splitter)
+
+
+`SupabaseVectorStore.fromDocuments`: This is an instance that merges your Supabase client with the logic of Langchain and the OpenAI model that converts documents into vectors and uploads them to vector database.
+
+`SplittedDocs`: This function receive two important parament, first `splittedDocs` or chunks.
+
+#### 4.2.2 Generate and store vectors
+
+`OpenAIEmbeddings`: This will initialize openai instance with `text-embedding-ada-002` model and that will transform our content into text as vectors and the out gets to be uploaded to the vector database.
+
+This is how `text-embedding-ada-002` is working.
+
+![Imgur](https://i.imgur.com/TADgWR5.png)
+
+Lastly we pass an object that contains supabase client with the table that will store our vectors.
 
 ```javascript
 await SupabaseVectorStore.fromDocuments(
     splittedDocs,
     new OpenAIEmbeddings({
-        openAIApiKey: process.env.OPENAI_API_KEY,
+      openAIApiKey: process.env.OPENAI_API_KEY,
     }),
     {
         client: supabase,
