@@ -1,5 +1,5 @@
 # Vector Database Course
-Welcome to the Vector Database Course! In this course, you'll learn how to create, integrate, and query vector databases. We will create a simple application that will have a that is connected to OpenAI's GPT but augement it's knowledge with your own data via a vector database.
+Welcome to the Vector Database Course! In this course, you'll learn how to create, integrate, and query vector databases. We will create a simple application that will have a connection to OpenAI's GPT but augment its knowledge with your own data via a vector database.
 
 # Usecases
 
@@ -7,7 +7,7 @@ Welcome to the Vector Database Course! In this course, you'll learn how to creat
 
 2. **Search Engines:** Embeddings can be employed to enhance the performance of search engines. By converting user queries and indexed documents into embeddings, search engines can deliver more accurate and relevant search results.
 
-> In this vector boilplate  we will use the vector database to extend the knowledge of openAI models which by now they only internet information up to 2021.
+> In this vector boilplate  we will use the vector database to extend the knowledge of openAI models which by now they only internet information up to 2020.
 
 ### What You Will Learn:
 Throughout this course, you will acquire the following essential skills:
@@ -186,68 +186,72 @@ After after vectorizing bun contents.
 
 ### 4.1 `pages/api/openai.js`
 
-This is an endpoint that enables to query openai model. 
+#### 4.1.1 Handler function
 
-This file holds handler functions that is responsible for accepting request from client and respond back with an actual answer from openai model.
 
-```js
-export default async function (req, res) {}
-```
+This file contains an endpoint that allows querying the OpenAI model.
 
-Inside our handler function if we have cofingured our openai if not we through back an error.
+This file holds handler functions that are responsible for accepting requests from clients and responding with an actual answer from the OpenAI model.
 
 ```js
-if (!configuration.apiKey) {}
+export default async function (req, res) {
+  // Your code goes here
+}
 ```
 
-Here we grab payload that came from the request body as question;
+Inside our handler function, we check if the OpenAI configuration is properly set up. If not, we throw an error.
+
+```js
+if (!configuration.apiKey) {
+  // Handle the error appropriately
+}
+```
+
+Next, we extract the payload from the request body as the question:
 
 ```js
 const question = req.body.payload || "";
 ```
 
-Here we are initialising the OpenAI with an object parameter with three items: `temperature`, `openAIApiKey`, `stream`.
+We initialize the OpenAI object with an object parameter that includes three items: `temperature`, `openAIApiKey`, and `stream`.
 
 ```js
 const model = new OpenAI({
-  temperature: 0, // values are 0 up to 1, this value responsible of how creative model should in terms of the response
+  temperature: 0, // Values range from 0 up to 1, determining the model's creativity in the response.
   openAIApiKey: process.env.OPENAI_API_KEY,
-  streaming: false, // If you want stream response you can set it true however this boilblate does not support streamed response.
+  streaming: false, // Set to true if you want to stream responses, but note that this boilerplate does not support streamed responses.
 });
 ```
 
-Here we are initializing vector store with supabase client and with table where we stored our vectors, this is responsible for giving as access to the voctor database.
+We also initialize a vector store with a Supabase client and specify the table where vectors are stored. This allows access to the vector database.
 
 ```js
- const vectorStore = await SupabaseVectorStore.fromExistingIndex(
-    new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }) // By default here openai is initialized with text-embedding-ada-002,
+const vectorStore = await SupabaseVectorStore.fromExistingIndex(
+  new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }),
   {
     client: supabase,
     tableName: "documents",
     queryName: "match_documents",
   }
 );
-
 ```
 
-Here we initialize chain that is responsible for extracting the context from the our vector and with `text-davinci-003` we get complition text which will be the answer/query of the payload with sent.
+We create a chain responsible for extracting context from our vector store, and with the `text-davinci-003` model, we obtain completion text, which will be the answer or query for the payload.
 
 ```js
-  const chain = ConversationalRetrievalQAChain.fromLLM(
-    model, // text-davinci-003 is used here by default if is not specified in the model object above.
-    vectorStore.asRetriever(), // This will be the context that contains the knowledge of the we nee
-  );
-
-``` 
-
-Finally, we make our chain call to get the response.
-
-> Note: chat_history: [] is not required to have elements however if you pass the chat history the model will be aware of the history. the format should be like this. ` [ { role: "assistant', content: "" }, { role: "user', content: "" } ] `;
-
-```js
-  const answer = await chain.call({ question: question, chat_history: [] });
+const chain = ConversationalRetrievalQAChain.fromLLM(
+  model, // By default, 'text-davinci-003' is used here if not specified in the model object above.
+  vectorStore.asRetriever(), // This context contains the knowledge we need.
+);
 ```
 
+Finally, we make a call to our chain to get the response.
+
+> Note: `chat_history: []` is not required to have elements; however, if you pass the chat history, the model will be aware of the conversation history. The format should be like this: ` [ { role: "assistant", content: "" }, { role: "user", content: "" } ];`
+
+```js
+const answer = await chain.call({ question: question, chat_history: [] });
+```
 
 ### 4.2 `pages/api/embed.js`
 
@@ -262,8 +266,6 @@ More information can be found [Here.](https://js.langchain.com/docs/modules/data
 
 
 `SupabaseVectorStore.fromDocuments`: This is an instance that merges your Supabase client with the logic of Langchain and the OpenAI model that converts documents into vectors and uploads them to vector database.
-
-`SplittedDocs`: This function receive two important parament, first `splittedDocs` or chunks.
 
 #### 4.2.2 Generate and store vectors
 
